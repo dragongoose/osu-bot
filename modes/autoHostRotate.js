@@ -83,13 +83,26 @@ class autoHostRotate {
 
 
 
-            this.channel.on("message", (msg) => {
+            this.channel.on("message", async (msg) => {
                 if (msg.message === '-info') {
-                    this.channel.sendMessage('I am a auto host rotate bot.')
+                    this.channel.sendMessage('I am a auto host rotate bot. [https://github.com/dragongoose/osu-bot View me here]')
                 }
 
                 if (msg.message === '-queue') {
                     this.channel.sendMessage(`Current queue; ${players.join(", ")}`)
+                }
+
+                if (msg.message.split(" ")[0] === '-start') {
+                    let split = msg.message.split(" ")
+                    
+                    if(parseInt(split[1]) != NaN && parseInt(split[1]) > 0) {
+                        await this.lobby.startMatch(parseInt(split[1]));
+                    }
+
+                    if(!split[1]) {
+                        this.channel.sendMessage('Starting round.')
+                        await this.lobby.startMatch();
+                    }
                 }
             })
 
