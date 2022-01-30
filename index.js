@@ -1,7 +1,7 @@
 const Bancho = require("bancho.js");
 require('dotenv').config()
 const chalk = require("chalk");
-const { autoHostRotate } = require("./autoHostRotate.js")
+const { autoHostRotate } = require("./modes/autoHostRotate.js")
 
 let message = chalk.cyan('[*]')
 let success = chalk.green('[!]')
