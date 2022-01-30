@@ -81,6 +81,11 @@ class autoHostRotate {
                 }
             })
 
+            this.lobby.on("allPlayersReady", async () => {
+                this.channel.sendMessage('Starting game. Good luck!')
+                this.lobby.startMatch();
+            })
+
 
 
             this.channel.on("message", async (msg) => {
@@ -100,8 +105,14 @@ class autoHostRotate {
                     }
 
                     if(!split[1]) {
-                        this.channel.sendMessage('Starting round.')
-                        await this.lobby.startMatch();
+                        if(msg.user.username != this.lobby.getHost().user.username){
+                            this.channel.sendMessage('Starting round in 30 seconds. Ready up to start faster.')
+                            await this.lobby.startMatch(30);
+                        } else {
+                            this.channel.sendMessage('Starting round, Enjoy!');
+                            await this.lobby.startMatch();
+                        }
+
                     }
                 }
             })
