@@ -1,8 +1,5 @@
 <br/>
 <p align="center">
-  <a href="https://github.com/dragongoose/osu-bot">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
 
   <h3 align="center">osu-bot</h3>
 
@@ -38,8 +35,6 @@
 * [Acknowledgements](#acknowledgements)
 
 ## About The Project
-
-![Screen Shot](images/screenshot.png)
 
 Ultimately, this bot was made on a Saturday night because I was bored.
 
