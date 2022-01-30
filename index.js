@@ -28,12 +28,23 @@ client.connect()
         lobbies.push(new autoHostRotate(client, "bot test 2", false, chalk));
     })
 
+client.on("disconnected", () => {
+    console.log(`${warn} disconnected from bancho.`)
+})
+
+client.on("error", (err) => {
+    console.log(`${danger} socket error!`)
+    console.log(err)
+})
+
 
 
 process.on("SIGINT", async () => {
-	console.log("Closing lobby and disconnecting...");
+	console.log("Closing lobbies and disconnecting...");
     for(let i = 0; i < lobbies.length; i++) {
         lobbies[i].lobby.closeLobby();
+        console.log(`${warn} lobby ${i + 1} closed.`)
     }
 	await client.disconnect();
+    console.log(`${success} See you next time!`)
 });
