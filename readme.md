@@ -92,6 +92,7 @@ The current available commands for the bot are:
 |--------------|-----------|
 | -info | Send a description of the bot and the link to this page.|
 | -queue | Shows current queue for auto host rotate | 
+| -start <time>| Start the round | 
 
 
 ## Roadmap
