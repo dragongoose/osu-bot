@@ -15,6 +15,7 @@ class autoHostRotate {
             const platform = os.platform();
 
             this.players = [];
+            this.usedBeatmaps = [];
 
             console.log(`${message} Making a Auto Host Rotate lobby`)
 
@@ -79,6 +80,9 @@ class autoHostRotate {
                         this.channel.sendMessage(`[https://osu.ppy.sh/osu/${id} ${mapinfo.artist} - ${mapinfo.title}], MAX COMBO: ${mapinfo.max_combo} | ${mapinfo.pp.toFixed(0)}PP | ${mapinfo.stars.toFixed(2)}* AR${mapinfo.ar.toFixed(1)} CS${mapinfo.cs.toFixed(1)} HP${mapinfo.hp.toFixed(1)} OD${mapinfo.od.toFixed(1)} | Alternitave [https://beatconnect.io/b/${id} beatconnect.io]`)
                     })
                 }
+
+                this.usedBeatmaps.push(id);
+
             })
 
             this.lobby.on("allPlayersReady", async () => {
