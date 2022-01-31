@@ -45,9 +45,10 @@ process.on("SIGINT", async () => {
 	console.log("Closing lobbies and disconnecting...");
 
     for(let i = 0; i < lobbies.length; i++) {
-        lobbies[i].lobby.closeLobby();
-        console.log(lobbies[i].usedBeatmaps)
-        console.log(`${warn} lobby ${i + 1} closed.`)
+        lobbies[i].close()
+            .then(() => {
+                console.log(`${warn} lobby ${i + 1} closed.`)
+            })
     }
 
 	await client.disconnect();

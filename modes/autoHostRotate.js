@@ -144,7 +144,7 @@ class autoHostRotate {
                 // remove duplicates
                 let lobbyBeatmaps = [...new Set(this.usedBeatmaps)]
 
-                fs.writeFile(`beatmap_exports_${Math.floor(Math.random() * 90 + 10)}`, lobbyBeatmaps, (err) => {
+                fs.writeFile(`${__dirname}/logs/beatmap_exports_${Math.floor(Math.random() * 90 + 10)}`, String(lobbyBeatmaps), (err) => {
       
                     // In case of a error throw err.
                     if (err) throw err;
