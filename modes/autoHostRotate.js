@@ -1,4 +1,13 @@
+const { BanchoClient } = require("bancho.js");
+
+/** Class representing a osu lobby that automatically rotates host */
 class autoHostRotate {
+    /**
+     * Create the lobby
+     * @param {BanchoClient} client Bancho.js Client 
+     * @param {string} name Name of the lobby
+     * @param {boolean} pass Generates a random password if true, unlocked if false
+     */
     constructor(client, name, pass) {
         const run = async () => {
 
