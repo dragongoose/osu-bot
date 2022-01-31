@@ -135,6 +135,7 @@ class autoHostRotate {
             /**
              * Saves beatmap ids to a file and closes the lobby.
              * @function
+             * @returns {closeLobby} Returns Bancho.js closeLobby promise
              */
             this.close = async function close() {
                 this.channel.sendMessage("Closing Lobby.")
