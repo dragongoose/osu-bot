@@ -131,6 +131,26 @@ class autoHostRotate {
                     }
                 }
             })
+            
+            /**
+             * Saves beatmap ids to a file and closes the lobby.
+             * @function
+             */
+            this.close = async function close() {
+                this.channel.sendMessage("Closing Lobby.")
+                const fs = require('fs')
+
+                // remove duplicates
+                let lobbyBeatmaps = [...new Set(this.usedBeatmaps)]
+
+                fs.writeFile(`beatmap_exports_${Math.floor(Math.random() * 90 + 10)}`, lobbyBeatmaps, (err) => {
+      
+                    // In case of a error throw err.
+                    if (err) throw err;
+                })
+                
+                return this.lobby.closeLobby()
+            }
 
         }
         run()
