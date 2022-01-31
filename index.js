@@ -24,18 +24,20 @@ const lobbies = []
 
 client.connect()
     .then(() => {
-        lobbies.push(new autoHostRotate(client, "bot test 1", true, chalk));
-        lobbies.push(new autoHostRotate(client, "bot test 2", false, chalk));
+        lobbies.push(new autoHostRotate(client, "bot test 1", true));
+        lobbies.push(new autoHostRotate(client, "bot test 2", true));
+
+        client.on("disconnected", () => {
+            console.log(`${warn} disconnected from bancho.`)
+        })
+        
+        client.on("error", (err) => {
+            console.log(`${danger} socket error!`)
+            console.log(err)
+        })
+        
     })
 
-client.on("disconnected", () => {
-    console.log(`${warn} disconnected from bancho.`)
-})
-
-client.on("error", (err) => {
-    console.log(`${danger} socket error!`)
-    console.log(err)
-})
 
 
 

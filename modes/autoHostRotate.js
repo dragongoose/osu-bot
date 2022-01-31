@@ -1,11 +1,11 @@
 class autoHostRotate {
-    constructor(client, name, pass, chalk) {
+    constructor(client, name, pass) {
         const run = async () => {
 
-            const color = ['red', 'green', 'blue', 'magenta', 'cyan', 'gray', 'orange'];
-            const randomnum = Math.floor(Math.random() * color.length);
+            const colors = ['red', 'green', 'blue', 'magenta', 'cyan', 'gray', 'orange'];
+            const chalk = require("chalk");
 
-            let message = chalk[color[randomnum]](`[*]  ${name} >`)
+            let message = chalk[colors[Math.floor(Math.random() * colors.length)]](`[*]  ${name} >`)
             let success = chalk.green(`[!]  ${name} >`)
             let warn = chalk.yellow(`[!]  ${name} >`)
             let danger = chalk.red(`[!] ${name} >`)
@@ -29,10 +29,12 @@ class autoHostRotate {
                 await this.lobby.setPassword(this.password)
                 console.log(`${message} Name is ${this.lobby.name}`)
                 console.log(`${message} Password is ${this.password}`)
-            } 
+            } else {
+                await this.lobby.setPassword("")
+                console.log(`${message} Name is ${this.lobby.name}`)
+            }
 
-            await this.lobby.setPassword("")
-            console.log(`${message} Name is ${this.lobby.name}`)
+            
 
             //events
             this.lobby.on("playerJoined", (obj) => {
