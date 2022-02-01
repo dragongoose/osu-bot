@@ -10,11 +10,20 @@ class autoHostRotate {
      */
     constructor(client, name, pass) {
         const run = async () => {
-
-            const colors = ['red', 'green', 'blue', 'magenta', 'cyan', 'gray', 'orange'];
             const chalk = require("chalk");
 
-            let message = chalk[colors[Math.floor(Math.random() * colors.length)]](`[*]  ${name} >`)
+            //generate random color for logging
+            const randomColor = () => {
+                let color = '#';
+                for (let i = 0; i < 6; i++) {
+                    const random = Math.random();
+                    const bit = (random * 16) | 0;
+                    color += (bit).toString(16);
+                };
+                return color;
+            };
+
+            let message = chalk.hex(randomColor)(`[*]  ${name} >`)
             let success = chalk.green(`[!]  ${name} >`)
             let warn = chalk.yellow(`[!]  ${name} >`)
             let danger = chalk.red(`[!] ${name} >`)
@@ -23,12 +32,19 @@ class autoHostRotate {
             const os = require("os");
             const platform = os.platform();
 
-            this.players = [];
-            this.usedBeatmaps = [];
 
             console.log(`${message} Making a Auto Host Rotate lobby`)
 
-            //Create a lobbu!
+            /**
+             * Array is used to keep track of every user in the lobby. Gets shifted for queue.
+             */
+            this.players = [];
+
+            /**
+             * Every beapmap the has been selected in the lobby is logged here. Saved when lobby is closed.
+             */
+            this.usedBeatmaps = [];
+
             this.channel = await client.createLobby(name);
             this.lobby = this.channel.lobby;
 
@@ -36,6 +52,7 @@ class autoHostRotate {
                 //generate random password
                 this.password = Math.random().toString(36).substring(8);
                 await this.lobby.setPassword(this.password)
+
                 console.log(`${message} Name is ${this.lobby.name}`)
                 console.log(`${message} Password is ${this.password}`)
             } else {
@@ -43,12 +60,34 @@ class autoHostRotate {
                 console.log(`${message} Name is ${this.lobby.name}`)
             }
 
-            
+            console.log(`${message} Setup complete! Lobby is ready.`)
+
+            /**
+            * Saves beatmap ids to a file and closes the lobby.
+            * @function
+            * @returns {closeLobby} Returns Bancho.js closeLobby promise
+            */
+            this.close = async function close() {
+                this.channel.sendMessage("Closing Lobby.")
+                const fs = require('fs')
+
+                // remove duplicates
+                let lobbyBeatmaps = [...new Set(this.usedBeatmaps)]
+
+                fs.writeFile(`${__dirname}/../logs/beatmap_exports_${Math.floor(Math.random() * 90 + 10)}`, String(lobbyBeatmaps), { flag: 'wx' }, (err) => {
+
+                    // In case of a error throw err.
+                    if (err) console.log(`${warn} Couldnt save used beatmaps!`);
+                })
+
+                return this.lobby.closeLobby()
+            }
+
 
             //events
             this.lobby.on("playerJoined", (obj) => {
                 if (obj.player.user.isClient())
-                this.lobby.setHost("#" + obj.player.user.id);
+                    this.lobby.setHost("#" + obj.player.user.id);
                 this.players.push(obj.player.user.username)
                 console.log(`${message} Made ${obj.player.user.username} host`)
                 console.log(`${message} ${obj.player.user.username} joined!`)
@@ -114,13 +153,13 @@ class autoHostRotate {
 
                 if (msg.message.split(" ")[0] === '-start') {
                     let split = msg.message.split(" ")
-                    
-                    if(parseInt(split[1]) != NaN && parseInt(split[1]) > 0) {
+
+                    if (parseInt(split[1]) != NaN && parseInt(split[1]) > 0) {
                         await this.lobby.startMatch(parseInt(split[1]));
                     }
 
-                    if(!split[1]) {
-                        if(msg.user.username != this.lobby.getHost().user.username){
+                    if (!split[1]) {
+                        if (msg.user.username != this.lobby.getHost().user.username) {
                             this.channel.sendMessage('Starting round in 30 seconds. Ready up to start faster.')
                             await this.lobby.startMatch(30);
                         } else {
@@ -131,28 +170,6 @@ class autoHostRotate {
                     }
                 }
             })
-            
-            /**
-             * Saves beatmap ids to a file and closes the lobby.
-             * @function
-             * @returns {closeLobby} Returns Bancho.js closeLobby promise
-             */
-            this.close = async function close() {
-                this.channel.sendMessage("Closing Lobby.")
-                const fs = require('fs')
-
-                // remove duplicates
-                let lobbyBeatmaps = [...new Set(this.usedBeatmaps)]
-
-                fs.writeFile(`${__dirname}/logs/beatmap_exports_${Math.floor(Math.random() * 90 + 10)}`, String(lobbyBeatmaps), (err) => {
-      
-                    // In case of a error throw err.
-                    if (err) throw err;
-                })
-                
-                return this.lobby.closeLobby()
-            }
-
         }
         run()
     }
