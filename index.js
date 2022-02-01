@@ -22,10 +22,11 @@ const client = new Bancho.BanchoClient({
 
 const lobbies = []
 
-client.connect()
+try{
+    client.connect()
     .then(() => {
         lobbies.push(new autoHostRotate(client, "bot test 1", true));
-        lobbies.push(new autoHostRotate(client, "bot test 2", true));
+        //lobbies.push(new autoHostRotate(client, "bot test 2", true));
 
         client.on("disconnected", () => {
             console.log(`${warn} disconnected from bancho.`)
@@ -37,6 +38,21 @@ client.connect()
         })
         
     })
+} catch (e) {
+    console.log("Closing lobbies and disconnecting...");
+
+    for(let i = 0; i < lobbies.length; i++) {
+        lobbies[i].close()
+            .then(() => {
+                console.log(`${warn} lobby ${i + 1} closed.`)
+            })
+    }
+
+	client.disconnect();
+    console.log(`${success} See you next time!`)
+}
+
+
 
 
 
