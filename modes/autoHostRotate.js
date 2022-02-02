@@ -13,18 +13,7 @@ class autoHostRotate {
         const run = async () => {
             const chalk = require("chalk");
 
-            //generate random color for logging
-            const randomColor = () => {
-                let color = '#';
-                for (let i = 0; i < 6; i++) {
-                    const random = Math.random();
-                    const bit = (random * 16) | 0;
-                    color += (bit).toString(16);
-                };
-                return color;
-            };
-
-            let message = chalk.hex(randomColor)(`[*]  ${name} >`)
+            let message = chalk.hex("#" + ((1<<24)*Math.random() | 0).toString(16))(`[*]  ${name} >`)
             let success = chalk.green(`[!]  ${name} >`)
             let warn = chalk.yellow(`[!]  ${name} >`)
             let danger = chalk.red(`[!] ${name} >`)
@@ -36,18 +25,23 @@ class autoHostRotate {
 
             console.log(`${message} Making a Auto Host Rotate lobby`)
 
-            /**
-             * Array is used to keep track of every user in the lobby. Gets shifted for queue.
-             */
-            this.players = [];
 
-            /**
-             * Every beapmap the has been selected in the lobby is logged here. Saved when lobby is closed.
-             */
+            // Array is used to keep track of every user in the lobby. Gets shifted for queue.
+            this.players = [];
+            // Every beapmap the has been selected in the lobby is logged here. Saved when lobby is closed.
             this.usedBeatmaps = [];
             this.channel = await client.createLobby(name);
             this.lobby = this.channel.lobby;
-            this.starRating = starRating
+
+            if(!starRating){
+                console.log(`${message} No star rating threshhold.`)
+            } else {
+                this.starRating = starRating
+                console.log(`${message} Star rating threshold is ${starRating[0]}-${starRating[1]}`)
+            }
+            
+
+            
 
             if (pass) {
                 //generate random password
