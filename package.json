@@ -13,5 +13,8 @@
     "bancho.js": "^0.9.7",
     "chalk": "4.1.2",
     "dotenv": "^14.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.8.0"
   }
 }
