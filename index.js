@@ -25,7 +25,7 @@ const lobbies = []
 try{
     client.connect()
     .then(() => {
-        lobbies.push(new autoHostRotate(client, "bot test 1", true));
+        lobbies.push(new autoHostRotate(client, "bot test", false, [4, 5]));
         //lobbies.push(new autoHostRotate(client, "bot test 2", true));
 
         client.on("disconnected", () => {

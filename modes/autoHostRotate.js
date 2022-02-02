@@ -7,8 +7,9 @@ class autoHostRotate {
      * @param {BanchoClient} client Bancho.js Client 
      * @param {string} name Name of the lobby
      * @param {boolean} pass Generates a random password if true, unlocked if false
+     * @param {Array} starRating Format [min, max]. Sets minimun and maximum star rating for lobby. defaults to none.
      */
-    constructor(client, name, pass) {
+    constructor(client, name, pass, starRating) {
         const run = async () => {
             const chalk = require("chalk");
 
@@ -44,9 +45,9 @@ class autoHostRotate {
              * Every beapmap the has been selected in the lobby is logged here. Saved when lobby is closed.
              */
             this.usedBeatmaps = [];
-
             this.channel = await client.createLobby(name);
             this.lobby = this.channel.lobby;
+            this.starRating = starRating
 
             if (pass) {
                 //generate random password
@@ -109,6 +110,9 @@ class autoHostRotate {
             });
 
             this.lobby.on("beatmapId", async (id) => {
+                if(id == null) return;
+
+                console.log(`${message} Beatmap changed to ${id}`)
                 if (platform === 'linux') {
                     exec(`curl https://osu.ppy.sh/osu/${id} | ./oppai - -ojson`, (error, stdout, stderr) => {
                         if (!stdout) {
@@ -116,7 +120,21 @@ class autoHostRotate {
                         }
                         const mapinfo = JSON.parse(stdout)
 
-                        this.channel.sendMessage(`[https://osu.ppy.sh/osu/${id} ${mapinfo.artist} - ${mapinfo.title}], MAX COMBO: ${mapinfo.max_combo} | ${mapinfo.pp.toFixed(0)}PP | ${mapinfo.stars.toFixed(2)}* AR${mapinfo.ar.toFixed(1)} CS${mapinfo.cs.toFixed(1)} HP${mapinfo.hp.toFixed(1)} OD${mapinfo.od.toFixed(1)} | Alternitave [https://beatconnect.io/b/${id} beatconnect.io]`)
+                        // Check if map is within star rating
+                        if(mapinfo.stars >= this.starRating[0] && mapinfo.stars <= this.starRating[1]){
+                            this.channel.sendMessage(`[https://osu.ppy.sh/osu/${id} ${mapinfo.artist} - ${mapinfo.title}], MAX COMBO: ${mapinfo.max_combo} | ${mapinfo.pp.toFixed(0)}PP | ${mapinfo.stars.toFixed(2)}* AR${mapinfo.ar.toFixed(1)} CS${mapinfo.cs.toFixed(1)} HP${mapinfo.hp.toFixed(1)} OD${mapinfo.od.toFixed(1)} | Alternitave [https://beatconnect.io/b/${id} beatconnect.io]`)
+                        } else {
+                            // Check if there is a valid map before the current
+                            if(typeof this.usedBeatmaps[this.usedBeatmaps.length - 2] != 'number'){
+                                this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.starRating[0].toFixed(2)}*-${this.starRating[1].toFixed(2)}*`)
+                            } else {
+                                // Revert to last map
+                                this.lobby.setMap(this.usedBeatmaps[this.usedBeatmaps.length - 2])
+                                this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.starRating[0].toFixed(2)}*-${this.starRating[1].toFixed(2)}*`)
+                            }
+                        }
+
+                        
                     })
                 }
 
@@ -127,7 +145,21 @@ class autoHostRotate {
                         }
                         const mapinfo = JSON.parse(stdout)
 
-                        this.channel.sendMessage(`[https://osu.ppy.sh/osu/${id} ${mapinfo.artist} - ${mapinfo.title}], MAX COMBO: ${mapinfo.max_combo} | ${mapinfo.pp.toFixed(0)}PP | ${mapinfo.stars.toFixed(2)}* AR${mapinfo.ar.toFixed(1)} CS${mapinfo.cs.toFixed(1)} HP${mapinfo.hp.toFixed(1)} OD${mapinfo.od.toFixed(1)} | Alternitave [https://beatconnect.io/b/${id} beatconnect.io]`)
+                        //check if map is within star rating.
+                        if(mapinfo.stars >= this.starRating[0] && mapinfo.stars <= this.starRating[1]){
+                            this.channel.sendMessage(`[https://osu.ppy.sh/osu/${id} ${mapinfo.artist} - ${mapinfo.title}], MAX COMBO: ${mapinfo.max_combo} | ${mapinfo.pp.toFixed(0)}PP | ${mapinfo.stars.toFixed(2)}* AR${mapinfo.ar.toFixed(1)} CS${mapinfo.cs.toFixed(1)} HP${mapinfo.hp.toFixed(1)} OD${mapinfo.od.toFixed(1)} | Alternitave [https://beatconnect.io/b/${id} beatconnect.io]`)
+                        } else {
+                             // Check if there is a valid map before the current
+                            if(typeof this.usedBeatmaps[this.usedBeatmaps.length - 2] != 'number'){
+                                this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.starRating[0].toFixed(2)}*-${this.starRating[1].toFixed(2)}*`)
+                            } else {
+                                // Revert to last map
+                                this.lobby.setMap(this.usedBeatmaps[this.usedBeatmaps.length - 2])
+                                this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.starRating[0].toFixed(2)}*-${this.starRating[1].toFixed(2)}*`)
+                            }
+                        }
+
+                        
                     })
                 }
 
