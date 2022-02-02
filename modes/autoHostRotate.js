@@ -107,7 +107,7 @@ class autoHostRotate {
 
                 console.log(`${message} Beatmap changed to ${id}`);
                 if (platform === "linux") {
-                    exec(`curl https://osu.ppy.sh/osu/${id} | ./oppai - -ojson`, (error, stdout, stderr) => {
+                    exec(`curl https://osu.ppy.sh/osu/${id} | oppai - -ojson`, (error, stdout, stderr) => {
                         if (!stdout) {
                             return console.log(stderr);
                         }
