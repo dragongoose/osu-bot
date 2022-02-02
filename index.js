@@ -1,18 +1,15 @@
+/* eslint-disable no-undef */
 const Bancho = require("bancho.js");
-require('dotenv').config()
+require("dotenv").config();
 const chalk = require("chalk");
-const { autoHostRotate } = require("./modes/autoHostRotate.js")
+const { autoHostRotate } = require("./modes/autoHostRotate.js");
 
-let message = chalk.cyan('[*]')
-let success = chalk.green('[!]')
-let warn = chalk.yellow('[!]')
-let danger = chalk.red('[!]')
+let message = chalk.cyan("[*]");
+let success = chalk.green("[!]");
+let warn = chalk.yellow("[!]");
+let danger = chalk.red("[!]");
 
-const exec = require('child_process').exec
-const os = require("os");
-const platform = os.platform();
-
-console.log(process.env.osuname, process.env.osupass)
+console.log(process.env.osuname, process.env.osupass);
 
 const client = new Bancho.BanchoClient({ 
     username: process.env.osuname, 
@@ -20,55 +17,58 @@ const client = new Bancho.BanchoClient({
     apiKey: process.env.apiKey,
 });
 
-const lobbies = []
+const lobbies = [];
 
 try{
+    console.log(`${message} Connecting to Bancho.`);
     client.connect()
-    .then(() => {
-        lobbies.push(new autoHostRotate(client, "bot test", false, [4, 5]));
-        //lobbies.push(new autoHostRotate(client, "bot test 2", true));
+        .then(() => {
+            console.log(`${message} Connected to Bancho!`);
 
-        client.on("disconnected", () => {
-            console.log(`${warn} Disconnected from bancho.`)
-        })
+            lobbies.push(new autoHostRotate(client, "bot test", false, [4, 5]));
+            //lobbies.push(new autoHostRotate(client, "bot test 2", true));
+
+            client.on("disconnected", () => {
+                console.log(`${warn} Disconnected from bancho.`);
+            });
         
-        client.on("error", (err) => {
-            console.log(`${danger} socket error!`)
-            console.log(err)
-        })
+            client.on("error", (err) => {
+                console.log(`${danger} socket error!`);
+                console.log(err);
+            });
         
-    })
+        });
 } catch (e) {
     console.log("Closing lobbies and disconnecting...");
 
     for(let i = 0; i < lobbies.length; i++) {
         lobbies[i].close()
             .then(() => {
-                console.log(`${warn} lobby ${i + 1} closed.`)
-            })
+                console.log(`${warn} lobby ${i + 1} closed.`);
+            });
 
-            if(i == lobbies.length) {
-                console.log(`${success} See you next time!`)
-            }
+        if(i == lobbies.length) {
+            console.log(`${success} See you next time!`);
+        }
     }
 
-	client.disconnect();
-    console.log(`${success} See you next time!`)
+    client.disconnect();
+    console.log(`${success} See you next time!`);
 }
 
 process.on("SIGINT", async () => {
-	console.log("Closing lobbies and disconnecting...");
+    console.log("Closing lobbies and disconnecting...");
 
     for(let i = 0; i < lobbies.length; i++) {
         lobbies[i].close()
             .then(() => {
-                console.log(`${warn} lobby ${i + 1} closed.`)
-            })
+                console.log(`${warn} lobby ${i + 1} closed.`);
+            });
 
         if(i == lobbies.length) {
-            console.log(`${success} See you next time!`)
+            console.log(`${success} See you next time!`);
         }
     }
 
-	await client.disconnect();
+    await client.disconnect();
 });
