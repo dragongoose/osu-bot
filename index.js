@@ -29,7 +29,7 @@ try{
         //lobbies.push(new autoHostRotate(client, "bot test 2", true));
 
         client.on("disconnected", () => {
-            console.log(`${warn} disconnected from bancho.`)
+            console.log(`${warn} Disconnected from bancho.`)
         })
         
         client.on("error", (err) => {
@@ -46,16 +46,15 @@ try{
             .then(() => {
                 console.log(`${warn} lobby ${i + 1} closed.`)
             })
+
+            if(i == lobbies.length) {
+                console.log(`${success} See you next time!`)
+            }
     }
 
 	client.disconnect();
     console.log(`${success} See you next time!`)
 }
-
-
-
-
-
 
 process.on("SIGINT", async () => {
 	console.log("Closing lobbies and disconnecting...");
@@ -65,8 +64,11 @@ process.on("SIGINT", async () => {
             .then(() => {
                 console.log(`${warn} lobby ${i + 1} closed.`)
             })
+
+        if(i == lobbies.length) {
+            console.log(`${success} See you next time!`)
+        }
     }
 
 	await client.disconnect();
-    console.log(`${success} See you next time!`)
 });
