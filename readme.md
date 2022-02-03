@@ -76,6 +76,19 @@ osupass=OSU_IRC_PASSWORD
 apiKey=OSU_API_KEY
 ```
 
+## Docker
+
+1. Build container
+
+```sh
+docker build -t osu-bot .
+```
+
+2. Run container
+```sh
+docker run -d -it osubot
+```
+
 **WARNING**
 The osu! password is not your account password.
 You can generate a IRC password [here](https://osu.ppy.sh/p/irc)
