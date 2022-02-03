@@ -30,11 +30,13 @@ class autoHostRotate {
             this.lobby.players = [];
             // Every beapmap the has been selected in the lobby is logged here. Saved when lobby is closed.
             this.lobby.usedBeatmaps = [];
+            // Beatmap regualtions are stored here
+            this.regulations = {};
 
             if(!starRating){
                 console.log(`${message} No star rating threshhold.`);
             } else {
-                this.starRating = starRating;
+                this.regulations.starRating = starRating;
                 console.log(`${message} Star rating threshold is ${starRating[0]}-${starRating[1]}`);
             }
             
@@ -114,16 +116,16 @@ class autoHostRotate {
                         const mapinfo = JSON.parse(stdout);
 
                         // Check if map is within star rating
-                        if(mapinfo.stars >= this.starRating[0] && mapinfo.stars <= this.starRating[1]){
+                        if(mapinfo.stars >= this.regulations.starRating[0] && mapinfo.stars <= this.regulations.starRating[1]){
                             this.channel.sendMessage(`[https://osu.ppy.sh/osu/${id} ${mapinfo.artist} - ${mapinfo.title}], MAX COMBO: ${mapinfo.max_combo} | ${mapinfo.pp.toFixed(0)}PP | ${mapinfo.stars.toFixed(2)}* AR${mapinfo.ar.toFixed(1)} CS${mapinfo.cs.toFixed(1)} HP${mapinfo.hp.toFixed(1)} OD${mapinfo.od.toFixed(1)} | Alternitave [https://beatconnect.io/b/${id} beatconnect.io]`);
                         } else {
                             // Check if there is a valid map before the current
                             if(typeof this.lobby.usedBeatmaps[this.lobby.usedBeatmaps.length - 2] != "number"){
-                                this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.starRating[0].toFixed(2)}*-${this.starRating[1].toFixed(2)}*`);
+                                this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.regulations.starRating[0].toFixed(2)}*-${this.regulations.starRating[1].toFixed(2)}*`);
                             } else {
                                 // Revert to last map
                                 this.lobby.setMap(this.lobby.usedBeatmaps[this.lobby.usedBeatmaps.length - 2]);
-                                this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.starRating[0].toFixed(2)}*-${this.starRating[1].toFixed(2)}*`);
+                                this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.regulations.starRating[0].toFixed(2)}*-${this.regulations.starRating[1].toFixed(2)}*`);
                             }
                         }
 
@@ -139,16 +141,16 @@ class autoHostRotate {
                         const mapinfo = JSON.parse(stdout);
 
                         //check if map is within star rating.
-                        if(mapinfo.stars >= this.starRating[0] && mapinfo.stars <= this.starRating[1]){
+                        if(mapinfo.stars >= this.regulations.starRating[0] && mapinfo.stars <= this.regulations.starRating[1]){
                             this.channel.sendMessage(`[https://osu.ppy.sh/osu/${id} ${mapinfo.artist} - ${mapinfo.title}], MAX COMBO: ${mapinfo.max_combo} | ${mapinfo.pp.toFixed(0)}PP | ${mapinfo.stars.toFixed(2)}* AR${mapinfo.ar.toFixed(1)} CS${mapinfo.cs.toFixed(1)} HP${mapinfo.hp.toFixed(1)} OD${mapinfo.od.toFixed(1)} | Alternitave [https://beatconnect.io/b/${id} beatconnect.io]`);
                         } else {
                             // Check if there is a valid map before the current
                             if(typeof this.lobby.usedBeatmaps[this.lobby.usedBeatmaps.length - 2] != "number"){
-                                this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.starRating[0].toFixed(2)}*-${this.starRating[1].toFixed(2)}*`);
+                                this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.regulations.starRating[0].toFixed(2)}*-${this.regulations.starRating[1].toFixed(2)}*`);
                             } else {
                                 // Revert to last map
                                 this.lobby.setMap(this.lobby.usedBeatmaps[this.lobby.usedBeatmaps.length - 2]);
-                                this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.starRating[0].toFixed(2)}*-${this.starRating[1].toFixed(2)}*`);
+                                this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.regulations.starRating[0].toFixed(2)}*-${this.regulations.starRating[1].toFixed(2)}*`);
                             }
                         }
 
