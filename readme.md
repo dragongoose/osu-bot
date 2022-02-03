@@ -59,7 +59,7 @@ For linux users, download the latest binaries for your OS from oppai's repositor
 1. Clone the repo
 
 ```sh
-git clone https://github.com/dragongoose/Project-Name.git
+git clone https://github.com/dragongoose/osu-bot.git
 ```
 
 2. Install NPM packages
