@@ -52,7 +52,7 @@ Visit the [osu! wiki](https://osu.ppy.sh/wiki/en/Bot_account) for more informati
 
 ### Prerequisites
 
-This bot uses [oppai](https://github.com/Francesco149/oppai) for beatmap info and pp calculation.
+This bot uses [oppai-ng](https://github.com/Francesco149/oppai-ng) for beatmap info and pp calculation.
 
 On windows you can download the executable file and drop it in the project's working directory.
 
