@@ -1,74 +1,30 @@
 /* eslint-disable no-undef */
-const Bancho = require("bancho.js");
-require("dotenv").config();
-const chalk = require("chalk");
-const { autoHostRotate } = require("./modes/autoHostRotate.js");
+const { glob } = require("glob");
+const { promisify } = require("util");
 
-let message = chalk.cyan("[*]");
-let success = chalk.green("[!]");
-let warn = chalk.yellow("[!]");
-let danger = chalk.red("[!]");
+const globPromise = promisify(glob);
 
-console.log(process.env.osuname, process.env.osupass);
+let commands = new Map();
 
-const client = new Bancho.BanchoClient({ 
-    username: process.env.osuname, 
-    password: process.env.osupass,
-    apiKey: process.env.apiKey,
-});
+const main = async () => {
+    const commandFiles = await globPromise(`${process.cwd()}/src/commands/**/*.js`);
 
-const lobbies = [];
+    commandFiles.map((value) => {
+        const file = require(value);
+        const splitted = value.split("/");
+        const directory = splitted[splitted.length - 2];
 
-try{
-    console.log(`${message} Connecting to Bancho.`);
-    client.connect()
-        .then(() => {
-            console.log(`${message} Connected to Bancho!`);
-
-            lobbies.push(new autoHostRotate(client, "bot test", false, [4, 5]));
-            //lobbies.push(new autoHostRotate(client, "bot test 2", true));
-
-            client.on("disconnected", () => {
-                console.log(`${warn} Disconnected from bancho.`);
-            });
-        
-            client.on("error", (err) => {
-                console.log(`${danger} socket error!`);
-                console.log(err);
-            });
-        
-        });
-} catch (e) {
-    console.log("Closing lobbies and disconnecting...");
-
-    for(let i = 0; i < lobbies.length; i++) {
-        lobbies[i].close()
-            .then(() => {
-                console.log(`${warn} lobby ${i + 1} closed.`);
-            });
-
-        if(i == lobbies.length) {
-            console.log(`${success} See you next time!`);
+        if (file.name) {
+            const properties = { directory, ...file };
+            commands.set(file.name, properties);
         }
-    }
+    });
 
-    client.disconnect();
-    console.log(`${success} See you next time!`);
-}
+    const mainScript = require("./src/");
+    mainScript.run();
+    
+};
 
-process.on("SIGINT", async () => {
-    console.log("Closing lobbies and disconnecting...");
+main();
 
-    for(let i = 0; i < lobbies.length; i++) {
-        lobbies[i].close()
-            .then(() => {
-                console.log(`${warn} lobby ${i + 1} closed.`);
-            });
-
-        if(i == lobbies.length) {
-            console.log(`${success} See you next time!`);
-        }
-    }
-
-    await client.disconnect();
-});
+module.exports.commands = commands;
