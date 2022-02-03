@@ -20,16 +20,16 @@ class autoHostRotate {
             const os = require("os");
             const platform = os.platform();
 
+            const { commands } = require("../../index.js");
 
             console.log(`${message} Making a Auto Host Rotate lobby`);
 
-
-            // Array is used to keep track of every user in the lobby. Gets shifted for queue.
-            this.players = [];
-            // Every beapmap the has been selected in the lobby is logged here. Saved when lobby is closed.
-            this.usedBeatmaps = [];
             this.channel = await client.createLobby(name);
             this.lobby = this.channel.lobby;
+            // Array is used to keep track of every user in the lobby. Gets shifted for queue.
+            this.lobby.players = [];
+            // Every beapmap the has been selected in the lobby is logged here. Saved when lobby is closed.
+            this.lobby.usedBeatmaps = [];
 
             if(!starRating){
                 console.log(`${message} No star rating threshhold.`);
@@ -65,7 +65,7 @@ class autoHostRotate {
                 const fs = require("fs");
 
                 // remove duplicates
-                let lobbyBeatmaps = [...new Set(this.usedBeatmaps)];
+                let lobbyBeatmaps = [...new Set(this.lobby.usedBeatmaps)];
 
                 // eslint-disable-next-line no-undef
                 fs.writeFile(`${__dirname}/../logs/beatmap_exports_${Math.floor(Math.random() * 90 + 10)}`, String(lobbyBeatmaps), { flag: "wx" }, (err) => {
@@ -82,24 +82,24 @@ class autoHostRotate {
             this.lobby.on("playerJoined", (obj) => {
                 if (obj.player.user.isClient())
                     this.lobby.setHost("#" + obj.player.user.id);
-                this.players.push(obj.player.user.username);
+                this.lobby.players.push(obj.player.user.username);
                 console.log(`${message} Made ${obj.player.user.username} host`);
                 console.log(`${message} ${obj.player.user.username} joined!`);
             });
 
             this.lobby.on("playerLeft", (obj) => {
-                const index = this.players.indexOf(obj.user.username);
+                const index = this.lobby.players.indexOf(obj.user.username);
                 if (index > -1) {
-                    this.players.splice(index, 1);
+                    this.lobby.players.splice(index, 1);
                 }
                 console.log(`${message} ${obj.user.username} left!`);
             });
 
             this.lobby.on("matchFinished", () => {
-                this.players.push(this.players.shift());
-                this.lobby.setHost(this.players[0]);
-                console.log(`${message} Made ${this.players[0]} host`);
-                this.channel.sendMessage(`Current host order; ${this.players.join(", ")}`);
+                this.lobby.players.push(this.lobby.players.shift());
+                this.lobby.setHost(this.lobby.players[0]);
+                console.log(`${message} Made ${this.lobby.players[0]} host`);
+                this.channel.sendMessage(`Current host order; ${this.lobby.players.join(", ")}`);
             });
 
             this.lobby.on("beatmapId", async (id) => {
@@ -118,11 +118,11 @@ class autoHostRotate {
                             this.channel.sendMessage(`[https://osu.ppy.sh/osu/${id} ${mapinfo.artist} - ${mapinfo.title}], MAX COMBO: ${mapinfo.max_combo} | ${mapinfo.pp.toFixed(0)}PP | ${mapinfo.stars.toFixed(2)}* AR${mapinfo.ar.toFixed(1)} CS${mapinfo.cs.toFixed(1)} HP${mapinfo.hp.toFixed(1)} OD${mapinfo.od.toFixed(1)} | Alternitave [https://beatconnect.io/b/${id} beatconnect.io]`);
                         } else {
                             // Check if there is a valid map before the current
-                            if(typeof this.usedBeatmaps[this.usedBeatmaps.length - 2] != "number"){
+                            if(typeof this.lobby.usedBeatmaps[this.lobby.usedBeatmaps.length - 2] != "number"){
                                 this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.starRating[0].toFixed(2)}*-${this.starRating[1].toFixed(2)}*`);
                             } else {
                                 // Revert to last map
-                                this.lobby.setMap(this.usedBeatmaps[this.usedBeatmaps.length - 2]);
+                                this.lobby.setMap(this.lobby.usedBeatmaps[this.lobby.usedBeatmaps.length - 2]);
                                 this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.starRating[0].toFixed(2)}*-${this.starRating[1].toFixed(2)}*`);
                             }
                         }
@@ -143,11 +143,11 @@ class autoHostRotate {
                             this.channel.sendMessage(`[https://osu.ppy.sh/osu/${id} ${mapinfo.artist} - ${mapinfo.title}], MAX COMBO: ${mapinfo.max_combo} | ${mapinfo.pp.toFixed(0)}PP | ${mapinfo.stars.toFixed(2)}* AR${mapinfo.ar.toFixed(1)} CS${mapinfo.cs.toFixed(1)} HP${mapinfo.hp.toFixed(1)} OD${mapinfo.od.toFixed(1)} | Alternitave [https://beatconnect.io/b/${id} beatconnect.io]`);
                         } else {
                             // Check if there is a valid map before the current
-                            if(typeof this.usedBeatmaps[this.usedBeatmaps.length - 2] != "number"){
+                            if(typeof this.lobby.usedBeatmaps[this.lobby.usedBeatmaps.length - 2] != "number"){
                                 this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.starRating[0].toFixed(2)}*-${this.starRating[1].toFixed(2)}*`);
                             } else {
                                 // Revert to last map
-                                this.lobby.setMap(this.usedBeatmaps[this.usedBeatmaps.length - 2]);
+                                this.lobby.setMap(this.lobby.usedBeatmaps[this.lobby.usedBeatmaps.length - 2]);
                                 this.channel.sendMessage(`${this.lobby.getHost().user.username}, that map is out of the star range! This lobbies star range is ${this.starRating[0].toFixed(2)}*-${this.starRating[1].toFixed(2)}*`);
                             }
                         }
@@ -156,7 +156,7 @@ class autoHostRotate {
                     });
                 }
 
-                this.usedBeatmaps.push(id);
+                this.lobby.usedBeatmaps.push(id);
 
             });
 
@@ -168,32 +168,17 @@ class autoHostRotate {
 
 
             this.channel.on("message", async (msg) => {
-                if (msg.message === "-info") {
-                    this.channel.sendMessage("I am a auto host rotate bot. [https://github.com/dragongoose/osu-bot View me here]");
-                }
+                if(msg.message[0] != "-") return;
+                const args = msg.message.split(" ");
+                args.shift();
+                const split = msg.message.split(" ");
 
-                if (msg.message === "-queue") {
-                    this.channel.sendMessage(`Current queue; ${this.players.join(", ")}`);
-                }
+                if(!commands.get(split[0].replace("-", ""))) return;
+                commands.get(split[0].replace("-", ""))
+                    .run(client, msg, args, this.channel, this.lobby);
+                
+                console.log(`${message} Command ${chalk.red(split[0].replace("-", ""))} was ran by ${msg.user.username}`);
 
-                if (msg.message.split(" ")[0] === "-start") {
-                    let split = msg.message.split(" ");
-
-                    if (!isNaN(parseInt(split[1])) && parseInt(split[1]) > 0) {
-                        await this.lobby.startMatch(parseInt(split[1]));
-                    }
-
-                    if (!split[1]) {
-                        if (msg.user.username != this.lobby.getHost().user.username) {
-                            this.channel.sendMessage("Starting round in 30 seconds. Ready up to start faster.");
-                            await this.lobby.startMatch(30);
-                        } else {
-                            this.channel.sendMessage("Starting round, Enjoy!");
-                            await this.lobby.startMatch();
-                        }
-
-                    }
-                }
             });
         };
         run();
