@@ -13,7 +13,7 @@
   </p>
 </p>
 
-![Forks](https://img.shields.io/github/forks/dragongoose/osu-bot) ![Stars](https://img.shields.io/github/stars/dragongoose/osu-bot) ![Issues](https://img.shields.io/github/issues/dragongoose/osu-bot) ![License](https://img.shields.io/github/issues/dragongoose/osu-bot) 
+![Forks](https://img.shields.io/github/forks/dragongoose/osu-bot) ![Stars](https://img.shields.io/github/stars/dragongoose/osu-bot) ![Issues](https://img.shields.io/github/issues/dragongoose/osu-bot) ![License](https://img.shields.io/github/license/dragongoose/osu-bot) 
 
 ## Table Of Contents
 
