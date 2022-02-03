@@ -9,8 +9,9 @@ module.exports = {
      * @param {Array} args 
      * @param {BanchoChannel} channel 
      * @param {BanchoLobby} lobby 
+     * @param {Object} plugins
      */
-    run: async (client, message, args, channel, lobby) => {
+    run: async (client, message, args, channel, lobby, plugins) => {
         channel.sendMessage(`Current queue; ${lobby.players.join(", ")}`);
     }
 };

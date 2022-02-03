@@ -11,8 +11,9 @@ module.exports = {
      * @param {Array} args 
      * @param {BanchoChannel} channel 
      * @param {BanchoLobby} lobby 
+     * @param {Object} plugins
      */
-    run: async (client, message, args, channel, lobby) => {
+    run: async (client, message, args, channel, lobby, plugins) => {
         console.log(args);
         if (!isNaN(parseInt(args[0])) && parseInt(args[0]) > 0) {
             await lobby.startMatch(parseInt(args[0]));

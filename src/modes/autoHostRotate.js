@@ -10,7 +10,7 @@ class autoHostRotate {
     constructor(client, name, pass, starRating) {
         const run = async () => {
             const chalk = require("chalk");
-
+        
             let message = chalk.hex("#" + ((1<<24)*Math.random() | 0).toString(16))(`[*]  ${name} >`);
             //let success = chalk.green(`[!]  ${name} >`);
             let warn = chalk.yellow(`[!]  ${name} >`);
@@ -20,7 +20,7 @@ class autoHostRotate {
             const os = require("os");
             const platform = os.platform();
 
-            const { commands } = require("../../index.js");
+            const { commands, plugins } = require("../../index.js");
 
             console.log(`${message} Making a Auto Host Rotate lobby`);
 
@@ -177,7 +177,7 @@ class autoHostRotate {
 
                 if(!commands.get(split[0].replace("-", ""))) return;
                 commands.get(split[0].replace("-", ""))
-                    .run(client, msg, args, this.channel, this.lobby);
+                    .run(client, msg, args, this.channel, this.lobby, plugins);
                 
                 console.log(`${message} Command ${chalk.red(split[0].replace("-", ""))} was ran by ${msg.user.username}`);
 
