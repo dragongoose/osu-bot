@@ -62,13 +62,7 @@ For linux users, download the latest binaries for your OS from oppai's repositor
 git clone https://github.com/dragongoose/osu-bot.git
 ```
 
-2. Install NPM packages
-
-```sh
-npm install
-```
-
-3. Enter your credentials in `.env`
+2. Enter your credentials in `.env`
 
 ```JS
 osuname=OSU_USERNAME
@@ -76,7 +70,7 @@ osupass=OSU_IRC_PASSWORD
 apiKey=OSU_API_KEY
 ```
 
-## Docker
+#### Docker
 
 1. Build container
 
@@ -87,6 +81,19 @@ docker build -t osu-bot .
 2. Run container
 ```sh
 docker run -d -it osubot
+```
+
+### Normal
+
+1. Install NPM packages
+
+```sh
+npm install
+```
+2. Run with node.js
+
+```sh
+node index
 ```
 
 **WARNING**
