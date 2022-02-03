@@ -48,6 +48,7 @@ Visit the [osu! wiki](https://osu.ppy.sh/wiki/en/Bot_account) for more informati
 ### Prerequisites
 
 This bot uses [oppai-ng](https://github.com/Francesco149/oppai-ng) for beatmap info and pp calculation.
+**WARNING**: This does mean that calculation will be slow if you have slow internet, as oppai-ng downloads the beatmap.
 
 On windows you can download the executable file and drop it in the project's working directory.
 
