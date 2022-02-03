@@ -7,9 +7,6 @@
     Multi use osu! bot that allows for customizable lobbies.
     <br/>
     <br/>
-    <br/>
-    <br/>
-    .
     <a href="https://github.com/dragongoose/osu-bot/issues">Report Bug</a>
     .
     <a href="https://github.com/dragongoose/osu-bot/issues">Request Feature</a>
