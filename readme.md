@@ -79,6 +79,7 @@ apiKey=OSU_API_KEY
 **WARNING**
 The osu! password is not your account password.
 You can generate a IRC password [here](https://osu.ppy.sh/p/irc)
+
 You can get a api key [here](https://osu.ppy.sh/p/api)
 
 ## Usage
