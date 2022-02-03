@@ -8,8 +8,20 @@ let commands = new Map();
 
 const main = async () => {
     const commandFiles = await globPromise(`${process.cwd()}/src/commands/**/*.js`);
+    const pluginFiles = await globPromise(`${process.cwd()}/src/plugins/**/*.js`);
 
     commandFiles.map((value) => {
+        const file = require(value);
+        const splitted = value.split("/");
+        const directory = splitted[splitted.length - 2];
+
+        if (file.name) {
+            const properties = { directory, ...file };
+            commands.set(file.name, properties);
+        }
+    });
+
+    pluginFiles.map((value) => {
         const file = require(value);
         const splitted = value.split("/");
         const directory = splitted[splitted.length - 2];
@@ -28,3 +40,4 @@ const main = async () => {
 main();
 
 module.exports.commands = commands;
+module.exports.plugins = pluginFiles;
