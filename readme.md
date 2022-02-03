@@ -83,7 +83,7 @@ docker build -t osu-bot .
 docker run -d -it osubot
 ```
 
-### Normal
+#### Normal
 
 1. Install NPM packages
 
