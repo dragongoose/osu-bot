@@ -25,7 +25,10 @@ const run = async () => {
         client.connect().then(() => {
             console.log(`${message} Connected to Bancho!`);
 
-            lobbies.push(new autoHostRotate(client, "bot test", false, [4, 5]));
+            lobbies.push(new autoHostRotate(client, "bot test", false, {
+                starRating: [5, 6], // [min, max]
+                length: 600 // max length for map in seconds
+            }));
             //lobbies.push(new autoHostRotate(client, "bot test 2", true));
 
             client.on("disconnected", () => {

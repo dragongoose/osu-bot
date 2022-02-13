@@ -5,6 +5,7 @@ const { promisify } = require("util");
 const globPromise = promisify(glob);
 
 let commands = new Map();
+let plugins = new Map();
 
 const main = async () => {
     const commandFiles = await globPromise(`${process.cwd()}/src/commands/**/*.js`);
@@ -28,7 +29,7 @@ const main = async () => {
 
         if (file.name) {
             const properties = { directory, ...file };
-            commands.set(file.name, properties);
+            plugins.set(file.name, properties);
         }
     });
 
@@ -40,4 +41,4 @@ const main = async () => {
 main();
 
 module.exports.commands = commands;
-module.exports.plugins = pluginFiles;
+module.exports.plugins = plugins;
