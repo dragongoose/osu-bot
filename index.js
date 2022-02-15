@@ -9,7 +9,7 @@ let plugins = new Map();
 
 const main = async () => {
     const commandFiles = await globPromise(`${process.cwd()}/src/commands/**/*.js`);
-    const pluginFiles = await globPromise(`${process.cwd()}/src/plugins/**/*.js`);
+    const pluginFiles = await globPromise(`${process.cwd()}/src/plugins/*.js`);
 
     commandFiles.map((value) => {
         const file = require(value);

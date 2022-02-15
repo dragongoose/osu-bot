@@ -11,7 +11,7 @@ module.exports = {
      * @param {BanchoLobby} lobby 
      * @param {Object} plugins
      */
-    run: async (client, mesage, args, channel, lobby, plugins) => {
+    run: async (client, message, args, channel, lobby, plugins) => {
         channel.sendMessage("I am a auto host rotate bot. [https://github.com/dragongoose/osu-bot View me here]");
     }
 };

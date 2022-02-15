@@ -32,6 +32,8 @@ class autoHostRotate {
             this.lobby.usedBeatmaps = [];
             // Beatmap regualtions are stored here
             this.lobby.regulations = regulations || {};
+            // Store votes for later
+            this.lobby.votes = new Map();
 
             for (const reg in regulations) {
                 if (reg === "starRating") {
